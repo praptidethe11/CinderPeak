@@ -189,7 +189,7 @@ public:
     if (PeakStatus resp = ctx->active_storage->impl_addVertex(src);
         !resp.isOK())
       return resp;
-    ctx->events.vertexAdded.emit({src}); // ✅ emit instead
+    ctx->events.vertexAdded.emit({src});
     return PeakStatus::OK();
   }
 
