@@ -28,11 +28,6 @@ public:
     throwExceptions.store(toggle, std::memory_order_relaxed);
   }
 
-  // ADD THIS
-  bool shouldThrowExceptions() const {
-    return throwExceptions.load(std::memory_order_relaxed);
-  }
-
   void setFileLogging(const std::string &path) {
     {
       std::lock_guard<std::mutex> lock(fileMutex);
@@ -55,7 +50,7 @@ public:
     std::string path;
     if (file) {
       std::lock_guard<std::mutex> lock(fileMutex);
-      path = logFilePath;
+      path = logFilePath; // copy safely
     }
 
     Logger::log(level, msg, console, file, path);
