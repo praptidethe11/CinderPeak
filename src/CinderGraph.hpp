@@ -161,7 +161,7 @@ public:
     auto resp = peak_store->addVertex(v);
     if (!resp.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in addVertex");
-      Exceptions::handle_exception_map(resp);
+      Exceptions::handle_exception_map(resp, peak_store->getRuntimePtr());
       // If exceptions are disabled, handle_exception_map returns -> fallthrough
       return {v, false};
     }
@@ -185,7 +185,7 @@ public:
     auto resp = peak_store->removeVertex(v);
     if (!resp.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in removeVertex");
-      Exceptions::handle_exception_map(resp);
+      Exceptions::handle_exception_map(resp, peak_store->getRuntimePtr());
       return false;
     }
     peak_store->log(LogLevel::INFO, "API: removeVertex completed successfully");
@@ -213,7 +213,7 @@ public:
     auto [data, status] = peak_store->removeEdge(src, dest);
     if (!status.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in removeEdge");
-      Exceptions::handle_exception_map(status);
+      Exceptions::handle_exception_map(status, peak_store->getRuntimePtr());
       return {std::nullopt, false};
     }
     peak_store->log(LogLevel::INFO, "API: removeEdge completed successfully");
@@ -233,7 +233,7 @@ public:
     auto resp = peak_store->clearVertices();
     if (!resp.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in clearVertices");
-      Exceptions::handle_exception_map(resp);
+      Exceptions::handle_exception_map(resp, peak_store->getRuntimePtr());
       return;
     }
     peak_store->log(LogLevel::INFO,
@@ -252,7 +252,7 @@ public:
     auto resp = peak_store->clearEdges();
     if (!resp.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in clearEdges");
-      Exceptions::handle_exception_map(resp);
+      Exceptions::handle_exception_map(resp, peak_store->getRuntimePtr());
       return;
     }
     peak_store->log(LogLevel::INFO, "API: clearEdges completed successfully");
@@ -297,7 +297,7 @@ public:
     auto resp = peak_store->addEdge(src, dest);
     if (!resp.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in addEdge (unweighted)");
-      Exceptions::handle_exception_map(resp);
+      Exceptions::handle_exception_map(resp, peak_store->getRuntimePtr());
       return {{src, dest}, false};
     }
     peak_store->log(LogLevel::INFO,
@@ -334,7 +334,7 @@ public:
     auto resp = peak_store->addEdge(src, dest, weight);
     if (!resp.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in addEdge (weighted)");
-      Exceptions::handle_exception_map(resp);
+      Exceptions::handle_exception_map(resp, peak_store->getRuntimePtr());
       return {{src, dest, weight}, false};
     }
     peak_store->log(LogLevel::INFO,
@@ -369,6 +369,10 @@ public:
       peak_store->log(LogLevel::WARNING, "API: Error in updateEdge");
       Exceptions::handle_exception_map(status);
       return {EdgeType(), false};
+=======
+      Exceptions::handle_exception_map(status, peak_store->getRuntimePtr());
+      return {newWeight, false};
+>>>>>>> db93c76 (fix: pass runtime to all handle_exception_map call sites)
     }
     peak_store->log(LogLevel::INFO, "API: updateEdge completed successfully");
     return {previousEdge, true};
@@ -389,7 +393,7 @@ public:
                                   const VertexType &dest) {
     auto [data, status] = peak_store->getEdge(src, dest);
     if (!status.isOK()) {
-      Exceptions::handle_exception_map(status);
+      Exceptions::handle_exception_map(status, peak_store->getRuntimePtr());
       return std::nullopt;
     }
     return data;
@@ -418,7 +422,7 @@ public:
     auto [neighbors, status] = peak_store->getNeighbors(v);
     if (!status.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in getNeighbors");
-      Exceptions::handle_exception_map(status);
+      Exceptions::handle_exception_map(status, peak_store->getRuntimePtr());
       return {};
     }
     peak_store->log(LogLevel::INFO, "API: getNeighbors completed successfully");
