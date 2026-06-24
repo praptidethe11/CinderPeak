@@ -367,12 +367,8 @@ public:
     auto [status, previousEdge] = peak_store->updateEdge(src, dest, newWeight);
     if (!status.isOK()) {
       peak_store->log(LogLevel::WARNING, "API: Error in updateEdge");
-      Exceptions::handle_exception_map(status);
-      return {EdgeType(), false};
-=======
       Exceptions::handle_exception_map(status, peak_store->getRuntimePtr());
       return {newWeight, false};
->>>>>>> db93c76 (fix: pass runtime to all handle_exception_map call sites)
     }
     peak_store->log(LogLevel::INFO, "API: updateEdge completed successfully");
     return {previousEdge, true};
