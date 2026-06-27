@@ -2,6 +2,7 @@
 #include "CinderExceptions.hpp"
 #include "ErrorCodes.hpp"
 #include "PeakLogger.hpp"
+#include "GraphRuntime.hpp"
 #include <atomic>
 #include <bitset>
 #include <cctype>
@@ -191,24 +192,45 @@ inline size_t CinderVertex::nextId = 1;
 inline size_t CinderEdge::nextId = 1;
 
 namespace Exceptions {
-inline void handle_exception_map(const PeakStatus &status) {
-  switch (static_cast<int>(status.code())) {
-  case static_cast<int>(StatusCode::NOT_FOUND):
+inline void handle_exception_map(const PeakStatus &status,
+                                 const GraphRuntime *runtime = nullptr) {
+  using namespace PeakExceptions;
+  bool shouldThrow = runtime && runtime->shouldThrowExceptions();
+
+  switch (status.code()) {
+  case StatusCode::VERTEX_ALREADY_EXISTS:
+    if (shouldThrow)
+      throw VertexAlreadyExistsException(status.message());
     break;
-  case static_cast<int>(StatusCode::UNIMPLEMENTED):
+  case StatusCode::VERTEX_NOT_FOUND:
+    if (shouldThrow)
+      throw VertexNotFoundException(status.message());
     break;
-  case static_cast<int>(StatusCode::ALREADY_EXISTS):
+  case StatusCode::EDGE_NOT_FOUND:
+    if (shouldThrow)
+      throw EdgeNotFoundException(status.message());
     break;
-  case static_cast<int>(StatusCode::VERTEX_ALREADY_EXISTS):
+  case StatusCode::EDGE_ALREADY_EXISTS:
+    if (shouldThrow)
+      throw EdgeAlreadyExistsException(status.message());
     break;
-  case static_cast<int>(StatusCode::VERTEX_NOT_FOUND):
+  case StatusCode::INVALID_ARGUMENT:
+    if (shouldThrow)
+      throw InvalidArgumentException(status.message());
     break;
-  case static_cast<int>(StatusCode::EDGE_ALREADY_EXISTS):
+  case StatusCode::INTERNAL_ERROR:
+    if (shouldThrow)
+      throw InternalErrorException(status.message());
+    break;
+  case StatusCode::NOT_FOUND:
+    if (shouldThrow)
+      throw NotFoundException(status.message());
     break;
   default:
+    if (shouldThrow)
+      throw UnknownException(status.message());
     break;
   }
-}
 } // namespace Exceptions
 
 struct Unweighted {};

@@ -24,6 +24,10 @@ public:
     logToConsole.store(toggle, std::memory_order_relaxed);
   }
 
+  bool shouldThrowExceptions() const {
+    return throwExceptions.load(std::memory_order_relaxed);
+  }
+
   void setThrowExceptions(bool toggle) {
     throwExceptions.store(toggle, std::memory_order_relaxed);
   }
