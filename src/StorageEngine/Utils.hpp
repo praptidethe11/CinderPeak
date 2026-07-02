@@ -1,8 +1,8 @@
 #pragma once
 #include "CinderExceptions.hpp"
 #include "ErrorCodes.hpp"
-#include "PeakLogger.hpp"
 #include "GraphRuntime.hpp"
+#include "PeakLogger.hpp"
 #include <atomic>
 #include <bitset>
 #include <cctype>
@@ -20,6 +20,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
 
 namespace CinderPeak {
 
@@ -231,6 +232,7 @@ inline void handle_exception_map(const PeakStatus &status,
       throw UnknownException(status.message());
     break;
   }
+}
 } // namespace Exceptions
 
 struct Unweighted {};
