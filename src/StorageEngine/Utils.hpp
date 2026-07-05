@@ -21,7 +21,6 @@
 #include <utility>
 #include <vector>
 
-
 namespace CinderPeak {
 
 using VertexId = uint64_t;

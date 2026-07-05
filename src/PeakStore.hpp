@@ -288,9 +288,8 @@ public:
       directed = false;
     return ctx->metadata->getGraphStatistics(directed);
   }
-  const GraphRuntime* getRuntimePtr() const{
-    return ctx->runtime.get();
-  }
+  const GraphRuntime *getRuntimePtr() const { return ctx->runtime.get(); }
+
   void log(const LogLevel &level, const std::string &message) const {
     ctx->runtime->log(level, message);
   }
